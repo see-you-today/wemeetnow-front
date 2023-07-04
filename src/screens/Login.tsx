@@ -13,6 +13,7 @@ import { theme } from "../utils/themes";
 
 type RootStackParamList = {
   Profile: undefined;
+  SignUp: undefined;
 };
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -22,8 +23,9 @@ type Props = {
 };
 
 export default function Login({ navigation }: Props) {
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
+  const [id, setId] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -70,7 +72,10 @@ export default function Login({ navigation }: Props) {
       </View>
       <View style={styles.signUpButtonContainer}>
         <Text>계정이 없으신가요?</Text>
-        <TouchableOpacity activeOpacity={0.8}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => navigation.navigate("SignUp")}
+        >
           <Text style={styles.findOrSignUpButton}>가입하기</Text>
         </TouchableOpacity>
       </View>
