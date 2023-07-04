@@ -6,20 +6,25 @@ import Profile from "./src/screens/Profile";
 import Login from "./src/screens/Login";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SignUp from "./src/screens/SignUp";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="Login"
-          component={Login}
-        />
-      </Stack.Navigator>
+      <QueryClientProvider client={queryClient}>
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Login"
+            component={Login}
+          />
+        </Stack.Navigator>
+      </QueryClientProvider>
     </NavigationContainer>
   );
 }

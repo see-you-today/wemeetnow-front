@@ -5,6 +5,6 @@ export const theme = {
     placeholder: "#5A686B",
     loginContainerBorder: "#EEEEEE",
     warning: "#A84448",
-    blueColor: "#3795BD",
+    blueColor: "#007df4",
   },
 };

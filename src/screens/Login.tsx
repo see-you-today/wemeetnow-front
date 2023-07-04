@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,10 @@ import {
 } from "react-native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { theme } from "../utils/themes";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+// SplashScreen.preventAutoHideAsync();
 
 type RootStackParamList = {
   Profile: undefined;
@@ -23,8 +27,21 @@ type Props = {
 };
 
 export default function Login({ navigation }: Props) {
-  const [id, setId] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [wrongUser, setWrongUser] = useState<boolean>(true);
+  const [fontsLoaded] = useFonts({
+    "Gaegu-Bold": require("../assets/Gaegu-Bold.ttf"),
+  });
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (fontsLoaded) {
+  //     await SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
@@ -35,7 +52,7 @@ export default function Login({ navigation }: Props) {
           style={styles.input}
           placeholder="Email"
           onChangeText={(text) => {
-            setId(text);
+            setEmail(text);
           }}
         />
         <TextInput
@@ -50,13 +67,8 @@ export default function Login({ navigation }: Props) {
           <View style={styles.absoluteView}>
             <Text style={styles.text}>로그인</Text>
           </View>
-          {/* <Image
-            source={require("../../assets/slightOceanView.jpg")}
-            style={styles.img}
-          /> */}
         </TouchableOpacity>
-        {/* <Image source={require("../../assets/OR.png")} style={styles.image} /> */}
-        {[] ? (
+        {wrongUser ? (
           <Text style={styles.warning}>
             잘못된 비밀번호입니다. 다시 확인하세요.
           </Text>
@@ -97,12 +109,14 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderColor: theme.color.loginContainerBorder,
     borderRadius: 5,
+    paddingBottom: 20,
   },
   title: {
     marginTop: 20,
-    fontSize: 30,
+    fontSize: 35,
     fontWeight: "600",
     marginBottom: 25,
+    fontFamily: "Gaegu-Bold",
   },
   findPasswordTitle: {
     fontSize: 13,
@@ -141,7 +155,7 @@ const styles = StyleSheet.create({
   },
   warning: {
     color: theme.color.warning,
-    marginBottom: 20,
+    marginTop: 20,
   },
   loginButton: {
     width: 289,
@@ -158,7 +172,6 @@ const styles = StyleSheet.create({
     zIndex: 2,
     position: "absolute",
     textAlign: "center",
-    backgroundColor: "transparent",
   },
   img: {
     zIndex: 1,
@@ -168,6 +181,8 @@ const styles = StyleSheet.create({
   },
   btn: {
     marginTop: 9,
+    backgroundColor: theme.color.blueColor,
+    borderRadius: 15,
     width: 289,
     height: 47,
     alignItems: "center",
@@ -180,6 +195,6 @@ const styles = StyleSheet.create({
   findPassword: {
     fontSize: 13,
     color: theme.color.blueColor,
-    marginBottom: 30,
+    marginTop: 20,
   },
 });
