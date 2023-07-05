@@ -23,7 +23,8 @@ export default function useAuth({ navigation }: LoginProps) {
         console.log("success");
         navigation.navigate("Home");
       },
-      onError: () => {
+      onError: (error) => {
+        console.log(error);
         setIsWrongUser(true);
       },
     }

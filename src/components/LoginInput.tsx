@@ -12,6 +12,7 @@ import { LoginProps } from "../screens/Login";
 import { useRecoilState } from "recoil";
 import { wrongUser } from "../atoms/authState";
 import useAuth from "../hooks/useAuth";
+import { loginApi } from "../apis/auth";
 
 export default function LoginInput({ navigation }: LoginProps) {
   const [email, setEmail] = useState<string>("");
@@ -54,7 +55,6 @@ export default function LoginInput({ navigation }: LoginProps) {
       <TouchableOpacity
         style={styles.btn}
         onPress={() => {
-          console.log(email, password);
           loginMutate({ email: email, password: password });
         }}
       >
