@@ -1,96 +1,32 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useCallback } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { View, StyleSheet } from "react-native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { theme } from "../utils/themes";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+
+import LoginInput from "../components/LoginInput";
+import SignUpButton from "../components/SignUpButton";
+import { RootStackParamList } from "../../App";
 
 // SplashScreen.preventAutoHideAsync();
 
-type RootStackParamList = {
-  Profile: undefined;
-  SignUp: undefined;
-};
-
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-type Props = {
+export type LoginProps = {
   navigation: LoginScreenNavigationProp;
 };
 
-export default function Login({ navigation }: Props) {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [wrongUser, setWrongUser] = useState<boolean>(true);
-  const [fontsLoaded] = useFonts({
-    "Gaegu-Bold": require("../assets/Gaegu-Bold.ttf"),
-  });
+export default function Login({ navigation }: LoginProps) {
   // const onLayoutRootView = useCallback(async () => {
   //   if (fontsLoaded) {
   //     await SplashScreen.hideAsync();
   //   }
   // }, [fontsLoaded]);
 
-  if (!fontsLoaded) {
-    return null;
-  }
-
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <View style={styles.loginInputContainer}>
-        <Text style={styles.title}>WeMeetNow</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          onChangeText={(text) => {
-            setEmail(text);
-          }}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry={true}
-          onChangeText={(text) => {
-            setPassword(text);
-          }}
-        />
-        <TouchableOpacity style={styles.btn}>
-          <View style={styles.absoluteView}>
-            <Text style={styles.text}>로그인</Text>
-          </View>
-        </TouchableOpacity>
-        {wrongUser ? (
-          <Text style={styles.warning}>
-            잘못된 비밀번호입니다. 다시 확인하세요.
-          </Text>
-        ) : (
-          ""
-        )}
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => navigation.navigate("Profile")}
-        >
-          <Text style={styles.findPassword}>비밀번호를 잊으셨나요?</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.signUpButtonContainer}>
-        <Text>계정이 없으신가요?</Text>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => navigation.navigate("SignUp")}
-        >
-          <Text style={styles.findOrSignUpButton}>가입하기</Text>
-        </TouchableOpacity>
-      </View>
+      <LoginInput navigation={navigation} />
+      <SignUpButton navigation={navigation} />
     </View>
   );
 }
