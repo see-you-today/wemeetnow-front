@@ -43,10 +43,11 @@ export function useCheckReissueToken(
   const { mutate: checkIsLoginMutate } = useMutation(checkIsLoginApi, {
     onSuccess: (res) => {
       console.log(res.data);
+      navigation.navigate("Home");
     },
     onError: async (error) => {
       console.log(error);
-      console.log('checkisLogin 실패')
+      console.log("checkisLogin 실패");
       //reissue token
       const refreshToken = await AsyncStorage.getItem("refreshToken");
       reissueAccessTokenMutate(refreshToken);
@@ -58,6 +59,7 @@ export function useCheckReissueToken(
     {
       onSuccess: async (res) => {
         console.log(res.data);
+        navigation.navigate("Home");
       },
       onError: (error) => {
         //다시 로그인 해주세요

@@ -35,7 +35,7 @@ export default function LoginInput({ navigation }: LoginProps) {
 
   return (
     <View style={styles.loginInputContainer}>
-      <Text style={styles.title}>WeMeetNow</Text>
+      <Text style={styles.title}>WEMEETNOW</Text>
       <TextInput
         style={styles.input}
         placeholder="Email"
