@@ -4,14 +4,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRecoilState } from "recoil";
 import { wrongUser } from "../atoms/authState";
 import { useMutation } from "@tanstack/react-query";
-import { loginApi } from "../apis/auth";
+import { checkIsLoginApi, loginApi, reissueAccessTokenApi } from "../apis/auth";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../App";
 
 interface UserData {
   email: string;
   password: string;
 }
 
-export default function useAuth({ navigation }: LoginProps) {
+export function useAuthNavigation(
+  navigation: NativeStackNavigationProp<RootStackParamList>
+) {
   const [isWrongUser, setIsWrongUser] = useRecoilState<boolean>(wrongUser);
 
   const { mutate: loginMutate } = useMutation(
@@ -29,5 +33,41 @@ export default function useAuth({ navigation }: LoginProps) {
       },
     }
   );
-  return [loginMutate];
+
+  return { loginMutate };
+}
+
+export function useCheckReissueToken(
+  navigation: NativeStackNavigationProp<RootStackParamList>
+) {
+  const { mutate: checkIsLoginMutate } = useMutation(checkIsLoginApi, {
+    onSuccess: (res) => {
+      console.log(res.data);
+    },
+    onError: async (error) => {
+      console.log(error);
+      console.log('checkisLogin 실패')
+      //reissue token
+      const refreshToken = await AsyncStorage.getItem("refreshToken");
+      reissueAccessTokenMutate(refreshToken);
+    },
+  });
+
+  const { mutate: reissueAccessTokenMutate } = useMutation(
+    (refreshToken: string | null) => reissueAccessTokenApi(refreshToken),
+    {
+      onSuccess: async (res) => {
+        console.log(res.data);
+      },
+      onError: (error) => {
+        //다시 로그인 해주세요
+        // 로그인 화면으로
+        console.log(error);
+        console.log("다시 로그인해야함");
+        navigation.navigate("Login");
+      },
+    }
+  );
+
+  return { checkIsLoginMutate };
 }

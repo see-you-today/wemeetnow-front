@@ -11,14 +11,13 @@ import { useFonts } from "expo-font";
 import { LoginProps } from "../screens/Login";
 import { useRecoilState } from "recoil";
 import { wrongUser } from "../atoms/authState";
-import useAuth from "../hooks/useAuth";
-import { loginApi } from "../apis/auth";
+import { useAuthNavigation } from "../hooks/useAuth";
 
 export default function LoginInput({ navigation }: LoginProps) {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isWrongUser] = useRecoilState<boolean>(wrongUser);
-  const [loginMutate] = useAuth({ navigation });
+  const { loginMutate } = useAuthNavigation(navigation);
 
   const [fontsLoaded] = useFonts({
     "Gaegu-Bold": require("../assets/Gaegu-Bold.ttf"),
