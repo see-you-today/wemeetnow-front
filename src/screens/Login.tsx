@@ -6,6 +6,8 @@ import { theme } from "../utils/themes";
 import LoginInput from "../components/LoginInput";
 import SignUpButton from "../components/SignUpButton";
 import { RootStackParamList } from "../../App";
+import { useEffect } from "react";
+import { useCheckReissueToken } from "../hooks/useAuth";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -21,7 +23,10 @@ export default function Login({ navigation }: LoginProps) {
   //     await SplashScreen.hideAsync();
   //   }
   // }, [fontsLoaded]);
-
+  const { checkIsLoginMutate } = useCheckReissueToken(navigation);
+  useEffect(() => {
+    checkIsLoginMutate();
+  }, []);
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />

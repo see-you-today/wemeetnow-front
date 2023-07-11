@@ -29,6 +29,7 @@ export function useAuthNavigation(
       },
       onError: (error) => {
         console.log(error);
+        console.log("로그인 실패");
         setIsWrongUser(true);
       },
     }

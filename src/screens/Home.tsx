@@ -1,9 +1,9 @@
-import { Text, View } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { useCheckReissueToken } from "../hooks/useAuth";
 import { RootStackParamList } from "../../App";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useEffect } from "react";
-
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export type HomeProps = {
@@ -11,13 +11,22 @@ export type HomeProps = {
 };
 
 export default function Home({ navigation }: HomeProps) {
-  const { checkIsLoginMutate } = useCheckReissueToken(navigation);
-  useEffect(() => {
-    checkIsLoginMutate();
-  }, []);
+  // const { checkIsLoginMutate } = useCheckReissueToken(navigation);
+  // useEffect(() => {
+  //   checkIsLoginMutate();
+  // }, []);
   return (
     <View>
-      <Text>HomePage</Text>
+      <MapView style={styles.map} provider={PROVIDER_GOOGLE} />
     </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  map: {
+    width: "100%",
+    height: "100%",
+  },
+});

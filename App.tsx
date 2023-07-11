@@ -9,6 +9,7 @@ import SignUp from "./src/screens/SignUp";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Home from "./src/screens/Home";
 import { RecoilRoot } from "recoil";
+import { useFonts } from "expo-font";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,12 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator();
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    "Gaegu-Bold": require("./assets/fonts/Gaegu-Bold.ttf"),
+  });
+    if (!fontsLoaded) {
+    return null;
+  }
   return (
     <NavigationContainer>
       <QueryClientProvider client={queryClient}>

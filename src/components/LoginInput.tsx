@@ -19,20 +19,6 @@ export default function LoginInput({ navigation }: LoginProps) {
   const [isWrongUser] = useRecoilState<boolean>(wrongUser);
   const { loginMutate } = useAuthNavigation(navigation);
 
-  const [fontsLoaded] = useFonts({
-    "Gaegu-Bold": require("../assets/Gaegu-Bold.ttf"),
-  });
-
-  // const onLayoutRootView = useCallback(async () => {
-  //   if (fontsLoaded) {
-  //     await SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
-
   return (
     <View style={styles.loginInputContainer}>
       <Text style={styles.title}>WEMEETNOW</Text>
