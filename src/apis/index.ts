@@ -4,6 +4,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const axiosApi = (url: string) => axios.create({ baseURL: url });
 
+const url = BASE_URL;
+
 const axiosAuthApi = async (url: string) => {
   const token = await AsyncStorage.getItem("accessToken");
   return axios.create({
@@ -12,5 +14,5 @@ const axiosAuthApi = async (url: string) => {
   });
 };
 
-export const defaultInstance = axiosApi(BASE_URL);
-export const authInstance = axiosAuthApi(BASE_URL);
+export const defaultInstance = axiosApi(url);
+export const authInstance = axiosAuthApi(url);

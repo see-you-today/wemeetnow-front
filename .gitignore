@@ -18,3 +18,4 @@ web-build/
 
 # private key
 .env
+app.config.ts

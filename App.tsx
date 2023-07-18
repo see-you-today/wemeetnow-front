@@ -25,7 +25,7 @@ export default function App() {
   const [fontsLoaded] = useFonts({
     "Gaegu-Bold": require("./assets/fonts/Gaegu-Bold.ttf"),
   });
-    if (!fontsLoaded) {
+  if (!fontsLoaded) {
     return null;
   }
   return (
