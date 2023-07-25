@@ -3,8 +3,9 @@ export const theme = {
     backGround: "#ffffff",
     inputBackGround: "#f9f9f9",
     placeholder: "#5A686B",
-    loginContainerBorder: "#EEEEEE",
+    border: "#EEEEEE",
     warning: "#A84448",
     blueColor: "#007df4",
+    black: "#111111",
   },
 };

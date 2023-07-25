@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderStyle: "solid",
-    borderColor: theme.color.loginContainerBorder,
+    borderColor: theme.color.border,
     borderRadius: 5,
   },
 
