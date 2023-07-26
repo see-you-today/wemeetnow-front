@@ -10,6 +10,7 @@ import More from "./More";
 import MoreIcon from "../components/ui/MoreIcon";
 import Schedule from "./Schedule";
 import CalendarIcon from "../components/ui/CalendarIcon";
+import Header from "../components/Header";
 
 const Tab = createBottomTabNavigator();
 
@@ -33,20 +34,24 @@ export default function Tabs() {
         }}
       />
       <Tab.Screen
-        name="Maps"
-        component={Maps}
+        name="ChatRoom"
+        component={ChatRoom}
         options={{
+          header: ({ navigation, route, options }) => {
+            return <Header title="채팅" />;
+          },
           tabBarIcon: ({ color, size, focused }) => (
-            <MapIcon color={color} size={size} focused={focused} />
+            <ChatIcon color={color} size={size} focused={focused} />
           ),
         }}
       />
       <Tab.Screen
-        name="ChatRoom"
-        component={ChatRoom}
+        name="Maps"
+        component={Maps}
         options={{
+          headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
-            <ChatIcon color={color} size={size} focused={focused} />
+            <MapIcon color={color} size={size} focused={focused} />
           ),
         }}
       />

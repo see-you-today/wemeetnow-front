@@ -1,27 +1,24 @@
-import { Text, View, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useCheckReissueToken } from "../hooks/useAuth";
-import { RootStackParamList } from "../../App";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { NavigationProps } from "../../App";
 import { useEffect, useState } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 
-type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
-export type HomeProps = {
-  navigation: HomeScreenNavigationProp;
+type HomeProps = {
+  navigation: NavigationProps;
 };
 
 export default function Maps({ navigation }: HomeProps) {
-  // const { checkIsLoginMutate } = useCheckReissueToken(navigation);
-  // useEffect(() => {
-  //   checkIsLoginMutate();
-  // }, []);
+  const { checkIsLoginMutate } = useCheckReissueToken(navigation);
+  useEffect(() => {
+    checkIsLoginMutate();
+  }, []);
   const [userLocation, setUserLocation] =
     useState<Location.LocationObject | null>(null);
 
   useEffect(() => {
-    (async () => {
+    async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("위치 승인 거절");
@@ -31,7 +28,7 @@ export default function Maps({ navigation }: HomeProps) {
       console.log("위치 승인 성공");
       const location = await Location.getCurrentPositionAsync();
       setUserLocation(location);
-    })();
+    };
   }, []);
   return (
     <View style={styles.container}>

@@ -25,7 +25,7 @@ export function useAuthNavigation(
         await AsyncStorage.setItem("accessToken", res.data.accessToken);
         setIsWrongUser(false);
         console.log("success");
-        navigation.navigate("Home");
+        navigation.navigate("Tabs");
       },
       onError: (error) => {
         console.log(error);
@@ -44,7 +44,7 @@ export function useCheckReissueToken(
   const { mutate: checkIsLoginMutate } = useMutation(checkIsLoginApi, {
     onSuccess: (res) => {
       console.log(res.data);
-      navigation.navigate("Home");
+      navigation.navigate("Tabs");
     },
     onError: async (error) => {
       console.log(error);
@@ -60,7 +60,7 @@ export function useCheckReissueToken(
     {
       onSuccess: async (res) => {
         console.log(res.data);
-        navigation.navigate("Home");
+        navigation.navigate("Tabs");
       },
       onError: (error) => {
         //다시 로그인 해주세요

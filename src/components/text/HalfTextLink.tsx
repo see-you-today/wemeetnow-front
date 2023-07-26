@@ -1,24 +1,24 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
-import { LoginProps } from "../screens/Login";
-import { theme } from "../utils/themes";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { LinkProps } from "./type";
+import { theme } from "../../utils/themes";
 
-export default function SignUpButton({ navigation }: LoginProps) {
+type HalfTextLinkProps = LinkProps & { linkText: string; nonLinkText: string };
+
+export default function HalfTextLink({
+  navigation,
+  route,
+  linkText,
+  nonLinkText,
+}: HalfTextLinkProps) {
   return (
     <View style={styles.signUpButtonContainer}>
-      <Text>계정이 없으신가요?</Text>
+      <Text>{nonLinkText}</Text>
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={() => navigation.navigate("SignUp")}
+        onPress={() => navigation.navigate(route)}
       >
-        <Text style={styles.findOrSignUpButton}>가입하기</Text>
+        <Text style={styles.findOrSignUpButton}>{linkText}</Text>
       </TouchableOpacity>
     </View>
   );

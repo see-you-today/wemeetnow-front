@@ -7,13 +7,18 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { theme } from "../utils/themes";
-import { useFonts } from "expo-font";
-import { LoginProps } from "../screens/Login";
 import { useRecoilState } from "recoil";
 import { wrongUser } from "../atoms/authState";
 import { useAuthNavigation } from "../hooks/useAuth";
+import WarningText from "./text/WarningText";
+import TextLink from "./text/TextLink";
+import { NavigationProps } from "../../App";
 
-export default function LoginInput({ navigation }: LoginProps) {
+type LoginInputProps = {
+  navigation: NavigationProps;
+};
+
+export default function LoginInput({ navigation }: LoginInputProps) {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isWrongUser] = useRecoilState<boolean>(wrongUser);
@@ -23,6 +28,7 @@ export default function LoginInput({ navigation }: LoginProps) {
     <View style={styles.loginInputContainer}>
       <Text style={styles.title}>WEMEETNOW</Text>
       <TextInput
+        autoCapitalize="none"
         style={styles.input}
         placeholder="Email"
         onChangeText={(text) => {
@@ -30,6 +36,7 @@ export default function LoginInput({ navigation }: LoginProps) {
         }}
       />
       <TextInput
+        autoCapitalize="none"
         style={styles.input}
         placeholder="Password"
         secureTextEntry={true}
@@ -48,18 +55,15 @@ export default function LoginInput({ navigation }: LoginProps) {
         </View>
       </TouchableOpacity>
       {isWrongUser ? (
-        <Text style={styles.warning}>
-          잘못된 비밀번호입니다. 다시 확인하세요.
-        </Text>
+        <WarningText text="잘못된 비밀번호입니다. 다시 확인하세요." />
       ) : (
         ""
       )}
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={() => navigation.navigate("Profile")}
-      >
-        <Text style={styles.findPassword}>비밀번호를 잊으셨나요?</Text>
-      </TouchableOpacity>
+      <TextLink
+        navigation={navigation}
+        route="Profile"
+        text="비밀번호를 잊으셨나요?"
+      />
     </View>
   );
 }

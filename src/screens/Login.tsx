@@ -1,20 +1,17 @@
 import { StatusBar } from "expo-status-bar";
 import { View, StyleSheet } from "react-native";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { theme } from "../utils/themes";
 
 import LoginInput from "../components/LoginInput";
-import SignUpButton from "../components/SignUpButton";
-import { RootStackParamList } from "../../App";
+import { NavigationProps } from "../../App";
 import { useEffect } from "react";
 import { useCheckReissueToken } from "../hooks/useAuth";
+import HalfTextLink from "../components/text/HalfTextLink";
 
 // SplashScreen.preventAutoHideAsync();
 
-type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
-export type LoginProps = {
-  navigation: LoginScreenNavigationProp;
+type LoginProps = {
+  navigation: NavigationProps;
 };
 
 export default function Login({ navigation }: LoginProps) {
@@ -31,7 +28,12 @@ export default function Login({ navigation }: LoginProps) {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <LoginInput navigation={navigation} />
-      <SignUpButton navigation={navigation} />
+      <HalfTextLink
+        navigation={navigation}
+        route="SignUp"
+        linkText="가입하기"
+        nonLinkText="계정이 없으신가요?"
+      />
     </View>
   );
 }
