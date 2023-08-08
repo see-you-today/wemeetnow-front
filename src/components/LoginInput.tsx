@@ -13,6 +13,9 @@ import { useAuthNavigation } from "../hooks/useAuth";
 import WarningText from "./text/WarningText";
 import TextLink from "./text/TextLink";
 import { NavigationProps } from "../../App";
+import AuthSubmitButton from "./button/AuthSubmitButton";
+import AuthInput from "./input/AuthInput";
+import AuthInputContainer from "./container/AuthInputContainer";
 
 type LoginInputProps = {
   navigation: NavigationProps;
@@ -25,35 +28,22 @@ export default function LoginInput({ navigation }: LoginInputProps) {
   const { loginMutate } = useAuthNavigation(navigation);
 
   return (
-    <View style={styles.loginInputContainer}>
+    <AuthInputContainer>
       <Text style={styles.title}>WEMEETNOW</Text>
-      <TextInput
-        autoCapitalize="none"
-        style={styles.input}
+      <AuthInput
         placeholder="Email"
-        onChangeText={(text) => {
-          setEmail(text);
-        }}
+        setState={setEmail}
+        secureTextEntry={false}
       />
-      <TextInput
-        autoCapitalize="none"
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry={true}
-        onChangeText={(text) => {
-          setPassword(text);
-        }}
+      <AuthInput
+        placeholder="password"
+        setState={setPassword}
+        secureTextEntry={false}
       />
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={() => {
-          loginMutate({ email: email, password: password });
-        }}
-      >
-        <View style={styles.absoluteView}>
-          <Text style={styles.text}>로그인</Text>
-        </View>
-      </TouchableOpacity>
+      <AuthSubmitButton
+        text="로그인"
+        onPress={() => loginMutate({ email: email, password: password })}
+      />
       {isWrongUser ? (
         <WarningText text="잘못된 비밀번호입니다. 다시 확인하세요." />
       ) : (
@@ -64,7 +54,7 @@ export default function LoginInput({ navigation }: LoginInputProps) {
         route="Profile"
         text="비밀번호를 잊으셨나요?"
       />
-    </View>
+    </AuthInputContainer>
   );
 }
 
@@ -84,55 +74,5 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 25,
     fontFamily: "Gaegu-Bold",
-  },
-
-  input: {
-    width: 290,
-    height: 47,
-    backgroundColor: theme.color.inputBackGround,
-    borderRadius: 10,
-    margin: 10,
-    paddingLeft: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-  },
-  warning: {
-    color: theme.color.warning,
-    marginTop: 20,
-  },
-
-  text: {
-    color: theme.color.backGround,
-    fontSize: 15,
-    textAlign: "center",
-    fontWeight: "600",
-  },
-  absoluteView: {
-    flex: 1,
-    zIndex: 2,
-    position: "absolute",
-    textAlign: "center",
-  },
-
-  btn: {
-    marginTop: 9,
-    backgroundColor: theme.color.blueColor,
-    borderRadius: 15,
-    width: 289,
-    height: 47,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  findPassword: {
-    fontSize: 13,
-    color: theme.color.blueColor,
-    marginTop: 20,
   },
 });

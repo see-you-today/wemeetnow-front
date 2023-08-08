@@ -1,4 +1,3 @@
-import { LoginProps } from "./../screens/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useRecoilState } from "recoil";
@@ -8,7 +7,7 @@ import { checkIsLoginApi, loginApi, reissueAccessTokenApi } from "../apis/auth";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";
 
-interface UserData {
+export interface UserData {
   email: string;
   password: string;
 }
