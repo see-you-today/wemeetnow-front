@@ -2,11 +2,12 @@ import { StatusBar } from "expo-status-bar";
 import { View, StyleSheet } from "react-native";
 import { theme } from "../utils/themes";
 
-import LoginInput from "../components/LoginInput";
+import LoginInput from "../components/Login/LoginInput";
 import { NavigationProps } from "../../App";
 import { useEffect } from "react";
 import { useCheckReissueToken } from "../hooks/useAuth";
 import HalfTextLink from "../components/text/HalfTextLink";
+import Container from "../components/container/Container";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -25,7 +26,7 @@ export default function Login({ navigation }: LoginProps) {
     checkIsLoginMutate();
   }, []);
   return (
-    <View style={styles.container}>
+    <Container>
       <StatusBar style="auto" />
       <LoginInput navigation={navigation} />
       <HalfTextLink
@@ -34,110 +35,6 @@ export default function Login({ navigation }: LoginProps) {
         linkText="가입하기"
         nonLinkText="계정이 없으신가요?"
       />
-    </View>
+    </Container>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: theme.color.backGround,
-  },
-  loginInputContainer: {
-    width: 325,
-    alignItems: "center",
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: theme.color.border,
-    borderRadius: 5,
-    paddingBottom: 20,
-  },
-  title: {
-    marginTop: 20,
-    fontSize: 35,
-    fontWeight: "600",
-    marginBottom: 25,
-    fontFamily: "Gaegu-Bold",
-  },
-  findPasswordTitle: {
-    fontSize: 13,
-  },
-  image: {
-    marginTop: 44,
-    marginBottom: 29,
-  },
-  signUpButtonContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 46,
-    width: 325,
-    height: 60,
-    alignItems: "center",
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: theme.color.border,
-    borderRadius: 5,
-  },
-  input: {
-    width: 290,
-    height: 47,
-    backgroundColor: theme.color.inputBackGround,
-    borderRadius: 10,
-    margin: 10,
-    paddingLeft: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-  },
-  warning: {
-    color: theme.color.warning,
-    marginTop: 20,
-  },
-  loginButton: {
-    width: 289,
-    height: 47,
-  },
-  text: {
-    color: theme.color.backGround,
-    fontSize: 15,
-    textAlign: "center",
-    fontWeight: "600",
-  },
-  absoluteView: {
-    flex: 1,
-    zIndex: 2,
-    position: "absolute",
-    textAlign: "center",
-  },
-  img: {
-    zIndex: 1,
-    width: 289,
-    height: 47,
-    borderRadius: 10,
-  },
-  btn: {
-    marginTop: 9,
-    backgroundColor: theme.color.blueColor,
-    borderRadius: 15,
-    width: 289,
-    height: 47,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  findOrSignUpButton: {
-    fontSize: 13,
-    color: theme.color.blueColor,
-  },
-  findPassword: {
-    fontSize: 13,
-    color: theme.color.blueColor,
-    marginTop: 20,
-  },
-});

@@ -1,21 +1,14 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
-import { theme } from "../utils/themes";
 import { useRecoilState } from "recoil";
-import { wrongUser } from "../atoms/authState";
-import { useAuthNavigation } from "../hooks/useAuth";
-import WarningText from "./text/WarningText";
-import TextLink from "./text/TextLink";
-import { NavigationProps } from "../../App";
-import AuthSubmitButton from "./button/AuthSubmitButton";
-import AuthInput from "./input/AuthInput";
-import AuthInputContainer from "./container/AuthInputContainer";
+import { wrongUser } from "../../atoms/authState";
+import { useAuthNavigation } from "../../hooks/useAuth";
+import WarningText from "../text/WarningText";
+import TextLink from "../text/TextLink";
+import { NavigationProps } from "../../../App";
+import AuthSubmitButton from "../button/AuthSubmitButton";
+import AuthInput from "../input/AuthInput";
+import AuthInputContainer from "../container/AuthInputContainer";
+import TitleText from "../text/TitleText";
 
 type LoginInputProps = {
   navigation: NavigationProps;
@@ -29,7 +22,7 @@ export default function LoginInput({ navigation }: LoginInputProps) {
 
   return (
     <AuthInputContainer>
-      <Text style={styles.title}>WEMEETNOW</Text>
+      <TitleText />
       <AuthInput
         placeholder="Email"
         setState={setEmail}
@@ -57,22 +50,3 @@ export default function LoginInput({ navigation }: LoginInputProps) {
     </AuthInputContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  loginInputContainer: {
-    width: 325,
-    alignItems: "center",
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: theme.color.border,
-    borderRadius: 5,
-    paddingBottom: 20,
-  },
-  title: {
-    marginTop: 20,
-    fontSize: 35,
-    fontWeight: "600",
-    marginBottom: 25,
-    fontFamily: "Gaegu-Bold",
-  },
-});

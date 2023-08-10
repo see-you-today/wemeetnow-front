@@ -1,10 +1,12 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Text } from "react-native";
+import Container from "../components/container/Container";
+import SignUpInput from "../components/SignUp/SignUpInput";
 
 export default function SignUp() {
   return (
-    <View>
-      <Text>SignUp</Text>
-    </View>
+    <Container>
+      <SignUpInput />
+    </Container>
   );
 }
