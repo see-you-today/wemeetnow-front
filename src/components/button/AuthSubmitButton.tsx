@@ -7,12 +7,7 @@ import { AxiosResponse } from "axios";
 
 interface AuthSubmitButtonProps {
   text: string;
-  onPress: (
-    variables: UserData,
-    options?:
-      | MutationOptions<AxiosResponse<any, any>, unknown, UserData, unknown>
-      | undefined
-  ) => void;
+  onPress: () => void;
 }
 
 export default function AuthSubmitButton({
@@ -20,7 +15,7 @@ export default function AuthSubmitButton({
   onPress,
 }: AuthSubmitButtonProps) {
   return (
-    <TouchableOpacity style={styles.btn}>
+    <TouchableOpacity style={styles.btn} onPress={onPress}>
       <View style={styles.absoluteView}>
         <Text style={styles.text}>{text}</Text>
       </View>
