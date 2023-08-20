@@ -31,20 +31,18 @@ export default function LoginInput({ navigation }: LoginInputProps) {
       <AuthInput
         placeholder="password"
         setState={setPassword}
-        secureTextEntry={false}
+        secureTextEntry={true}
       />
       <AuthSubmitButton
         text="로그인"
-        onPress={() => loginMutate({ email: email, password: password })}
+        onPress={() => loginMutate({ email, password })}
       />
-      {isWrongUser ? (
+      {isWrongUser && (
         <WarningText text="잘못된 비밀번호입니다. 다시 확인하세요." />
-      ) : (
-        ""
       )}
       <TextLink
         navigation={navigation}
-        route="Profile"
+        route="SignUp"
         text="비밀번호를 잊으셨나요?"
       />
     </AuthInputContainer>

@@ -1,15 +1,15 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ChatRoom from "../screens/ChatRoom";
 import Maps from "./Maps";
-import UserIcon from "../components/ui/UserIcon";
+import UserIcon from "../components/ui/icon/UserIcon";
 import { theme } from "../utils/themes";
 import Friends from "./Friends";
-import ChatIcon from "../components/ui/ChatIcon";
-import MapIcon from "../components/ui/MapIcon";
+import ChatIcon from "../components/ui/icon/ChatIcon";
+import MapIcon from "../components/ui/icon/MapIcon";
 import More from "./More";
-import MoreIcon from "../components/ui/MoreIcon";
+import MoreIcon from "../components/ui/icon/MoreIcon";
 import Schedule from "./Schedule";
-import CalendarIcon from "../components/ui/CalendarIcon";
+import CalendarIcon from "../components/ui/icon/CalendarIcon";
 import Header from "../components/Header";
 
 const Tab = createBottomTabNavigator();

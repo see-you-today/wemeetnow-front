@@ -1,5 +1,5 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { IconProps } from "./type";
+import { IconProps } from "../type";
 
 export default function UserIcon({ size, color, focused }: IconProps) {
   const iconName = focused ? "user" : "user-o";

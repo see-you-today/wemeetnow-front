@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AuthInputContainer from "../container/AuthInputContainer";
 import TitleText from "../text/TitleText";
 import AuthInput from "../input/AuthInput";
@@ -12,7 +12,7 @@ export default function SignUpInput() {
       <AuthInput />
       <AuthInput />
       <AuthInput />
-      <AuthSubmitButton text="회원가입"/> */}
+      <AuthSubmitButton text="회원가입" /> */}
     </AuthInputContainer>
   );
 }
