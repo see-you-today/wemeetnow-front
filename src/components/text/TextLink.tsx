@@ -4,9 +4,14 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { theme } from "../../utils/themes";
 import { LinkProps } from "./type";
 
-type TextLinkProps = LinkProps & { text: string };
+type TextLinkProps = LinkProps & { text: string; roomId?: number };
 
-export default function TextLink({ navigation, route, text }: TextLinkProps) {
+export default function TextLink({
+  navigation,
+  route,
+  text,
+  roomId,
+}: TextLinkProps) {
   const handlePress = () => navigation.navigate(route);
 
   return (
