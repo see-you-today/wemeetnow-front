@@ -1,72 +1,56 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
-import dayjs from "dayjs";
-import "dayjs/locale/ko";
+import { StyleSheet, Text, View } from "react-native";
 import { ChatMessageProps } from "./type";
 import { theme } from "../../../utils/themes";
-import { useSendTime } from "./hooks/useSendTime";
+import { useSendTime } from "../hooks/useSendTime";
 
 export default function MyChat({
   content,
-  senderName,
   sendDateTime,
   notReadCount,
-  senderImgUrl,
 }: ChatMessageProps) {
   const sendTime = useSendTime(sendDateTime);
   return (
-    <View style={styles.container}>
-      <Image style={styles.image} source={{ uri: senderImgUrl }} />
-      <View style={styles.chatBox}>
-        <Text style={styles.senderName}>{senderName}</Text>
-        <View style={styles.chatContentBox}>
-          <Text style={styles.content}>{content}</Text>
-          <View style={styles.sendTimeBox}>
-            <Text style={styles.notReadCount}>
-              {notReadCount > 0 && notReadCount}
-            </Text>
-            <Text style={styles.sendTime}>{sendTime}</Text>
-          </View>
+    <View style={styles.chatBox}>
+      <View style={styles.chatContentBox}>
+        <View style={styles.sendTimeBox}>
+          <Text style={styles.notReadCount}>
+            {notReadCount > 0 && notReadCount}
+          </Text>
+          <Text style={styles.sendTime}>{sendTime}</Text>
         </View>
+        <Text style={styles.content}>{content}</Text>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    maxWidth: 250,
-    flexDirection: "row",
-    marginTop: 10,
-    marginLeft: 10,
-  },
-  image: {
-    width: 50,
-    height: 50,
-    borderRadius: 18,
-  },
   chatBox: {
-    marginLeft: 10,
-    maxWidth: "80%",
+    flex: 1,
+    flexDirection: "row",
+    marginTop: 15,
+    marginRight: 10,
+    justifyContent: "flex-end",
   },
-  senderName: {
-    marginBottom: 8,
-  },
+
   chatContentBox: {
     flexDirection: "row",
-    alignItems: "center",
+    justifyContent: "flex-end",
   },
 
   content: {
+    maxWidth: "70%",
     padding: 8,
     borderRadius: 8,
     overflow: "hidden",
-    backgroundColor: theme.color.chatBackground,
+    backgroundColor: theme.color.blueColor,
     color: theme.color.backGround,
   },
   sendTimeBox: {
+    marginRight: 8,
     alignSelf: "flex-end",
-    marginLeft: 8,
+    alignItems: "flex-end",
   },
   sendTime: {
     color: theme.color.chatBackground,
