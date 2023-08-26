@@ -1,12 +1,9 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../utils/themes";
+import { ContainerProps } from "./type";
 
-interface ContainerProps {
-  children: ReactNode;
-}
-
-export default function Container({ children }: ContainerProps) {
+export default function AuthContainer({ children }: ContainerProps) {
   return <View style={styles.container}>{children}</View>;
 }
 

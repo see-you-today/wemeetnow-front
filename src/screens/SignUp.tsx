@@ -1,12 +1,11 @@
 import React from "react";
-import { Text } from "react-native";
-import Container from "../components/container/Container";
+import AuthContainer from "../components/container/AuthContainer";
 import SignUpInput from "../components/SignUp/SignUpInput";
 
 export default function SignUp() {
   return (
-    <Container>
+    <AuthContainer>
       <SignUpInput />
-    </Container>
+    </AuthContainer>
   );
 }

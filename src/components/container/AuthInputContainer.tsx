@@ -1,12 +1,9 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../utils/themes";
+import { ContainerProps } from "./type";
 
-interface AuthInputContainerProps {
-  children: ReactNode;
-}
-
-const AuthInputContainer = ({ children }: AuthInputContainerProps) => {
+const AuthInputContainer = ({ children }: ContainerProps) => {
   return <View style={styles.loginInputContainer}>{children}</View>;
 };
 

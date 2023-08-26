@@ -1,13 +1,11 @@
 import { StatusBar } from "expo-status-bar";
-import { View, StyleSheet } from "react-native";
-import { theme } from "../utils/themes";
 
 import LoginInput from "../components/Login/LoginInput";
 import { NavigationProps } from "../../App";
 import { useEffect } from "react";
 import { useCheckReissueToken } from "../hooks/useAuth";
 import HalfTextLink from "../components/text/HalfTextLink";
-import Container from "../components/container/Container";
+import AuthContainer from "../components/container/AuthContainer";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -24,9 +22,9 @@ export default function Login({ navigation }: LoginProps) {
   const { checkIsLoginMutate } = useCheckReissueToken(navigation);
   useEffect(() => {
     checkIsLoginMutate();
-  }, []);
+  }, [checkIsLoginMutate]);
   return (
-    <Container>
+    <AuthContainer>
       <StatusBar style="auto" />
       <LoginInput navigation={navigation} />
       <HalfTextLink
@@ -35,6 +33,6 @@ export default function Login({ navigation }: LoginProps) {
         linkText="가입하기"
         nonLinkText="계정이 없으신가요?"
       />
-    </Container>
+    </AuthContainer>
   );
 }

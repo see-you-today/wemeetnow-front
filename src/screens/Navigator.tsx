@@ -6,6 +6,7 @@ import Login from "./Login";
 import { useRecoilValue } from "recoil";
 import { isLogin } from "../atoms/authState";
 import { RootStackParamList } from "../../App";
+import ChatRoom from "./ChatRoom";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -36,6 +37,8 @@ export default function Navigator() {
             options={{ headerShown: false }}
             component={Login}
           />
+          {/* 임시 */}
+          <Stack.Screen name="ChatRoom" component={ChatRoom} />
         </>
       )}
     </Stack.Navigator>
