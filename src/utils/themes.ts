@@ -7,6 +7,7 @@ export const theme = {
     warning: "#A84448",
     blueColor: "#007df4",
     black: "#111111",
-    chatBackground: "#313132",
+    chatBackground: "#383838",
+    chatNotice: "#292929",
   },
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import "dayjs/locale/ko";
-import { ChatMessageProps } from "./type";
+import { OtherChatProps } from "../type";
 import { theme } from "../../../utils/themes";
 import { useSendTime } from "../hooks/useSendTime";
 
@@ -11,7 +11,7 @@ export default function OtherChat({
   sendDateTime,
   notReadCount,
   senderImgUrl,
-}: ChatMessageProps) {
+}: OtherChatProps) {
   const sendTime = useSendTime(sendDateTime);
 
   return (
@@ -35,6 +35,7 @@ export default function OtherChat({
 
 const styles = StyleSheet.create({
   container: {
+    maxWidth: 250,
     flexDirection: "row",
     marginTop: 15,
     marginLeft: 10,
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
   },
   chatBox: {
     marginLeft: 10,
+    maxWidth: "80%",
   },
   senderName: {
     marginBottom: 8,
