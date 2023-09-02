@@ -9,12 +9,18 @@ import {
 import { theme } from "../../utils/themes";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
+import InviteChat from "./chatTypes.tsx/InviteChat";
+import JoinChat from "./chatTypes.tsx/JoinChat";
+import { ChatProps } from "./type";
+import LeaveChat from "./chatTypes.tsx/LeaveChat";
+import MyChat from "./chatTypes.tsx/MyChat";
+import OtherChat from "./chatTypes.tsx/OtherChat";
 
 interface ChatMessageProps {
   content: string;
   chatType: "CHAT" | "JOIN" | "INVITE" | "LEAVE";
   senderName: string;
-  invitedUserName?: string;
+  invitedUserName: string | null;
   sendDateTime: string;
   notReadCount: number;
   isSender: boolean;
@@ -30,11 +36,45 @@ export default function ChatMessage({
   notReadCount,
   isSender,
   senderImgUrl,
-}: ChatMessageProps) {
-  const date = new Date(sendDateTime);
-  const sendTime = dayjs(date, "YYYY-MM-DD HH:mm:ss")
-    .locale("ko")
-    .format("A h:mm");
-
-  return <View></View>;
+}: ChatProps) {
+  return (
+    <>
+      {chatType === "INVITE" ? (
+        invitedUserName != null ? (
+          <InviteChat
+            senderName={senderName}
+            invitedUserName={invitedUserName}
+          />
+        ) : (
+          <></>
+        )
+      ) : chatType === "JOIN" ? (
+        invitedUserName != null ? (
+          <JoinChat invitedUserName={invitedUserName} />
+        ) : (
+          <></>
+        )
+      ) : chatType === "LEAVE" ? (
+        senderName != null ? (
+          <LeaveChat senderName={senderName} />
+        ) : (
+          <></>
+        )
+      ) : isSender === true ? (
+        <MyChat
+          content={content}
+          sendDateTime={sendDateTime}
+          notReadCount={notReadCount}
+        />
+      ) : (
+        <OtherChat
+          content={content}
+          senderName={senderName}
+          sendDateTime={sendDateTime}
+          notReadCount={notReadCount}
+          senderImgUrl={senderImgUrl}
+        />
+      )}
+    </>
+  );
 }

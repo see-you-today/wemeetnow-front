@@ -4,7 +4,7 @@ export interface ChatProps {
   content: string;
   chatType: ChatType;
   senderName: string;
-  invitedUserName?: string;
+  invitedUserName: string | null;
   sendDateTime: string;
   notReadCount: number;
   isSender: boolean;
