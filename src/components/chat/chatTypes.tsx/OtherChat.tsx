@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import "dayjs/locale/ko";
 import { OtherChatProps } from "../type";
 import { theme } from "../../../utils/themes";
-import { useSendTime } from "../hooks/useSendTime";
+import { useSendTime } from "../../../hooks/useSendTime";
 
 export default function OtherChat({
   content,

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useRecoilState } from "recoil";
 import { wrongUser } from "../../atoms/authState";
-import { useAuthNavigation } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import WarningText from "../text/WarningText";
 import TextLink from "../text/TextLink";
 import { NavigationProps } from "../../../App";
@@ -18,7 +18,7 @@ export default function LoginInput({ navigation }: LoginInputProps) {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isWrongUser] = useRecoilState<boolean>(wrongUser);
-  const { loginMutate } = useAuthNavigation(navigation);
+  const { loginMutate } = useAuth(navigation);
 
   return (
     <AuthInputContainer>

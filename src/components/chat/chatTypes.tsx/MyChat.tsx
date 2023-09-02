@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { MyChatProps } from "../type";
 import { theme } from "../../../utils/themes";
-import { useSendTime } from "../hooks/useSendTime";
+import { useSendTime } from "../../../hooks/useSendTime";
 
 export default function MyChat({
   content,

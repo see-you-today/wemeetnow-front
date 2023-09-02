@@ -12,7 +12,7 @@ export interface UserData {
   password: string;
 }
 
-export function useAuthNavigation(
+export function useAuth(
   navigation: NativeStackNavigationProp<RootStackParamList>
 ) {
   const [isWrongUser, setIsWrongUser] = useRecoilState<boolean>(wrongUser);
@@ -67,6 +67,7 @@ export function useCheckReissueToken(
     {
       onSuccess: async (res) => {
         console.log(res.data);
+        console.log("erere");
         setIsWrongUser(false);
         setIsSignedIn(true);
         navigation.navigate("Tabs");
