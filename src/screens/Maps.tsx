@@ -1,5 +1,4 @@
 import { View, StyleSheet } from "react-native";
-import { useCheckReissueToken } from "../hooks/useAuth";
 import { NavigationProps } from "../../App";
 import { useEffect, useState } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
@@ -10,10 +9,10 @@ type HomeProps = {
 };
 
 export default function Maps({ navigation }: HomeProps) {
-  const { checkIsLoginMutate } = useCheckReissueToken(navigation);
-  useEffect(() => {
-    checkIsLoginMutate();
-  }, []);
+  // const { checkIsLoginMutate } = useCheckReissueToken();
+  // useEffect(() => {
+  //   checkIsLoginMutate();
+  // }, [checkIsLoginMutate]);
   const [userLocation, setUserLocation] =
     useState<Location.LocationObject | null>(null);
 
@@ -29,7 +28,7 @@ export default function Maps({ navigation }: HomeProps) {
       const location = await Location.getCurrentPositionAsync();
       setUserLocation(location);
     };
-  }, []);
+  }, [setUserLocation]);
   return (
     <View style={styles.container}>
       <MapView

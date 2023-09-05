@@ -3,7 +3,6 @@ import { StatusBar } from "expo-status-bar";
 import LoginInput from "../components/Login/LoginInput";
 import { NavigationProps } from "../../App";
 import { useEffect } from "react";
-import { useCheckReissueToken } from "../hooks/useAuth";
 import HalfTextLink from "../components/text/HalfTextLink";
 import AuthContainer from "../components/container/AuthContainer";
 
@@ -19,10 +18,10 @@ export default function Login({ navigation }: LoginProps) {
   //     await SplashScreen.hideAsync();
   //   }
   // }, [fontsLoaded]);
-  const { checkIsLoginMutate } = useCheckReissueToken(navigation);
-  useEffect(() => {
-    checkIsLoginMutate();
-  }, [checkIsLoginMutate]);
+  // const { checkIsLoginMutate } = useCheckReissueToken(navigation);
+  // useEffect(() => {
+  //   checkIsLoginMutate();
+  // }, [checkIsLoginMutate]);
   return (
     <AuthContainer>
       <StatusBar style="auto" />
