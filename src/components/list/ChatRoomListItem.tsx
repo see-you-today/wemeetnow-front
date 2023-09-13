@@ -21,7 +21,7 @@ interface ChatRoomListProps {
   navigation: NavigationProps;
 }
 
-export default function ChatRoomList({
+export default function ChatRoomListItem({
   image,
   chatRoomName,
   lastChat,

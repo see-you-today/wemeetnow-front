@@ -2,7 +2,7 @@ import { AxiosResponse } from "axios";
 
 import { authInstance, defaultInstance } from "./index";
 
-export async function checkChatRooms(): Promise<AxiosResponse<any>> {
+export async function getChatRooms(): Promise<AxiosResponse<any>> {
   return (await authInstance).get("/api/v1/chat-rooms");
 }
 export async function setChatRoom(

@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import ChatList from "./ChatList";
+import ChatRoomList from "./ChatRoomList";
 import Maps from "./Maps";
 import UserIcon from "../components/ui/icon/UserIcon";
 import { theme } from "../utils/themes";
@@ -34,8 +34,8 @@ export default function Tabs() {
         }}
       />
       <Tab.Screen
-        name="ChatList"
-        component={ChatList}
+        name="ChatRoomList"
+        component={ChatRoomList}
         options={{
           header: ({ navigation, route, options }) => {
             return <Header title="채팅" />;
