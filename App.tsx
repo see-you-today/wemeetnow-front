@@ -17,6 +17,7 @@ export type RootStackParamList = {
   Login: undefined;
   ChatRoom: { roomId: number } | undefined;
   Tabs: undefined;
+  Splash: undefined;
 };
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 

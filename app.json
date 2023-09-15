@@ -6,11 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/wemeetnowIcon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splashScreen.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,

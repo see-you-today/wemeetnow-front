@@ -7,14 +7,14 @@ import { useRecoilValue } from "recoil";
 import { isLogin } from "../atoms/authState";
 import { RootStackParamList } from "../../App";
 import ChatRoom from "./ChatRoom";
-
+import Splash from "./Splash";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function Navigator() {
   const isSignedIn = useRecoilValue(isLogin);
 
   return (
-    <Stack.Navigator initialRouteName="Tabs">
+    <Stack.Navigator initialRouteName="Splash">
       {isSignedIn ? (
         <>
           <Stack.Screen
@@ -22,23 +22,44 @@ export default function Navigator() {
             options={{ headerShown: false }}
             component={Tabs}
           />
-        </>
-      ) : (
-        <>
-          {/* Temp */}
           <Stack.Screen
-            name="Tabs"
-            options={{ headerShown: false }}
-            component={Tabs}
+            name="ChatRoom"
+            // options={{ headerShown: false }}
+            component={ChatRoom}
           />
-          <Stack.Screen name="SignUp" component={SignUp} />
           <Stack.Screen
             name="Login"
             options={{ headerShown: false }}
             component={Login}
           />
-          {/* 임시 */}
+          <Stack.Screen name="SignUp" component={SignUp} />
+        </>
+      ) : (
+        <>
+          {/* Temp */}
+          {/* <Stack.Screen
+            name="Tabs"
+            options={{ headerShown: false }}
+            component={Tabs}
+          /> */}
+          <Stack.Screen
+            name="Login"
+            options={{ headerShown: false }}
+            component={Login}
+          />
+          <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen
+            name="Splash"
+            options={{ headerShown: false }}
+            component={Splash}
+          />
+          <Stack.Screen
+            name="Tabs"
+            options={{ headerShown: false }}
+            component={Tabs}
+          />
           <Stack.Screen name="ChatRoom" component={ChatRoom} />
+          {/* 임시 */}
         </>
       )}
     </Stack.Navigator>
