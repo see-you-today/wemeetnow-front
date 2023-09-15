@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import "dayjs/locale/ko";
 import { OtherChatProps } from "../type";
 import { theme } from "../../../utils/themes";
-import { useSendTime } from "../../../hooks/useSendTime";
+import { useChatSendTime } from "../../../utils/date";
 
 export default function OtherChat({
   content,
@@ -12,7 +12,7 @@ export default function OtherChat({
   notReadCount,
   senderImgUrl,
 }: OtherChatProps) {
-  const sendTime = useSendTime(sendDateTime);
+  const sendTime = useChatSendTime(sendDateTime);
 
   return (
     <View style={styles.container}>

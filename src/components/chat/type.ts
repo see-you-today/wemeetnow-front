@@ -1,5 +1,14 @@
 type ChatType = "CHAT" | "JOIN" | "INVITE" | "LEAVE";
 
+export type ChatRoomListType = {
+  chatRoomId: number;
+  chatRoomName: string;
+  totalNum: number;
+  chatRoomImgUrl: string;
+  lastMessageDateTime: string | null;
+  lastMessageContent: string | null;
+};
+
 export interface ChatProps {
   content: string;
   chatType: ChatType;

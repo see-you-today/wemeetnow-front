@@ -2,14 +2,14 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { MyChatProps } from "../type";
 import { theme } from "../../../utils/themes";
-import { useSendTime } from "../../../hooks/useSendTime";
+import { useChatSendTime } from "../../../utils/date";
 
 export default function MyChat({
   content,
   sendDateTime,
   notReadCount,
 }: MyChatProps) {
-  const sendTime = useSendTime(sendDateTime);
+  const sendTime = useChatSendTime(sendDateTime);
   return (
     <View style={styles.chatBox}>
       <View style={styles.chatContentBox}>
