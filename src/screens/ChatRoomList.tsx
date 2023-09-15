@@ -1,34 +1,32 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { theme } from "../utils/themes";
-import { getChatRooms } from "../apis/chatroom";
 import ChatRoomListItem from "../components/list/ChatRoomListItem";
 import { NavigationProps } from "../../App";
+import useGetChatRooms from "../hooks/useGetChatRooms";
 
 interface ChatListProps {
   navigation: NavigationProps;
 }
 
 export default function ChatRoomList({ navigation }: ChatListProps) {
-  useEffect(() => {
-    getChatRooms()
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((error) => console.log("채팅방 목록 실패", error));
-  }, [getChatRooms]);
+  const ChatRoomListItems = useGetChatRooms(navigation);
+
+
   return (
     <ScrollView style={styles.container}>
-      {/* map 함수 */}
-      <ChatRoomListItem
-        chatRoomName={"title"}
-        lastChat="message"
-        lastChatTime="10시"
-        memberCount={6}
-        image={require("../../assets/wemeetnowIcon.png")}
-        navigation={navigation}
-        id={12}
-      />
+      {ChatRoomListItems.map((item) => (
+        <ChatRoomListItem
+          key={item.chatRoomId}
+          chatRoomName={item.chatRoomName}
+          lastMessageContent={item.lastMessageContent}
+          lastMessageDateTime={item.lastMessageDateTime}
+          totalNum={item.totalNum}
+          chatRoomImgUrl={item.chatRoomImgUrl}
+          navigation={navigation}
+          chatRoomId={item.chatRoomId}
+        />
+      ))}
     </ScrollView>
   );
 }

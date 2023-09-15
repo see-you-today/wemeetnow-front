@@ -1,11 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { isLogin, wrongUser } from "../atoms/authState";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { checkIsLoginApi, loginApi } from "../apis/auth";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";
+import { useEffect } from "react";
 
 export interface UserData {
   email: string;
@@ -25,14 +26,12 @@ export function useAuth(
         await AsyncStorage.setItem("accessToken", res.data.accessToken);
         await AsyncStorage.setItem("refreshToken", res.data.refreshToken);
         setIsWrongUser(false);
-        setIsSignedIn(true);
         console.log("success");
         navigation.navigate("Tabs");
       },
       onError: (error) => {
         console.log(error);
         console.log("로그인 실패");
-        setIsSignedIn(false);
         setIsWrongUser(true);
       },
     }
@@ -41,6 +40,44 @@ export function useAuth(
   return { loginMutate };
 }
 
+export const useCheckLogin = async (
+  navigation: NativeStackNavigationProp<RootStackParamList>
+) => {
+  useEffect(() => {
+    const api = async () => {
+      checkIsLoginApi()
+        .then((data) => {
+          console.log(data);
+          navigation.navigate("Tabs");
+        })
+        .catch((err) => {
+          console.log("checkIsLogin실패", err);
+          navigation.navigate("Login");
+        });
+    };
+    api();
+  }, []);
+};
+
+// export function useCheckLogin(
+//   navigation: NativeStackNavigationProp<RootStackParamList>
+// ) {
+//   const setIsSignedIn = useSetRecoilState(isLogin);
+
+//   const { data, isLoading } = useQuery(["checkLogin"], () => checkIsLoginApi, {
+//     onSuccess: () => {
+//       console.log("check 성공");
+//       setIsSignedIn(true);
+//     },
+
+//     onError: () => {
+//       console.log("check실패");
+//       setIsSignedIn(false);
+//       navigation.navigate("Login");
+//     },
+//   });
+//   return [data, isLoading];
+// }
 // export function useCheckReissueToken(
 //   navigation: NativeStackNavigationProp<RootStackParamList>
 // ) {

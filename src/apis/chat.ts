@@ -9,7 +9,7 @@ export async function setChatRoom(
   chatRoomName: string,
   participantIdList: [number]
 ): Promise<AxiosResponse<any>> {
-  return (await authInstance).post("/api/v1/chat-rooms", {
+  return authInstance.post("/api/v1/chat-rooms", {
     chatRoomName: chatRoomName,
     participantIdList: participantIdList, // 초대당한 사용자들의 id값의 리스트 (방 생성자 미포함)
   });
