@@ -1,12 +1,15 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native"; // 전체 네비게이션을 감싸는 컨테이너 불러오기
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RecoilRoot, useRecoilValue } from "recoil";
+import { RecoilRoot } from "recoil";
 import { useFonts } from "expo-font";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { TextEncoder } from "text-encoding";
 
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Navigator from "./src/screens/Navigator";
+
+new TextEncoder();
 
 const queryClient = new QueryClient();
 

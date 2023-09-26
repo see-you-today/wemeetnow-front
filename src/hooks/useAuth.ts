@@ -47,7 +47,6 @@ export const useCheckLogin = async (
     const api = async () => {
       checkIsLoginApi()
         .then((data) => {
-          console.log(data);
           navigation.navigate("Tabs");
         })
         .catch((err) => {
