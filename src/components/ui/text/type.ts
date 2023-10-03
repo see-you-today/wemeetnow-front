@@ -1,4 +1,4 @@
-import { NavigationProps, RootStackParamList } from "../../../App";
+import { NavigationProps, RootStackParamList } from "../../../../App";
 
 export type LinkProps = {
   navigation: NavigationProps;

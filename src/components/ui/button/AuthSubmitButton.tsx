@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { theme } from "../../utils/themes";
+import { theme } from "../../../utils/themes";
 import { MutationOptions, UseMutateFunction } from "@tanstack/react-query";
-import { UserData } from "../../hooks/useAuth";
+import { UserData } from "../../../hooks/useAuth";
 import { AxiosResponse } from "axios";
 
 interface AuthSubmitButtonProps {

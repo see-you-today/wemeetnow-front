@@ -2,8 +2,8 @@ import { StatusBar } from "expo-status-bar";
 
 import LoginInput from "../components/Login/LoginInput";
 import { NavigationProps } from "../../App";
-import HalfTextLink from "../components/text/HalfTextLink";
-import AuthContainer from "../components/container/AuthContainer";
+import HalfTextLink from "../components/ui/text/HalfTextLink";
+import AuthContainer from "../components/ui/container/AuthContainer";
 
 type LoginProps = {
   navigation: NavigationProps;

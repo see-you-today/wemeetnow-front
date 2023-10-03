@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, TextInput } from "react-native";
-import { theme } from "../../utils/themes";
+import { theme } from "../../../utils/themes";
 
 interface AuthInputProps {
   placeholder: string;

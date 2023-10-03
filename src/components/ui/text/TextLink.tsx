@@ -1,7 +1,7 @@
 import React from "react";
-import { NavigationProps, RootStackParamList } from "../../../App";
+import { NavigationProps, RootStackParamList } from "../../../../App";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
-import { theme } from "../../utils/themes";
+import { theme } from "../../../utils/themes";
 import { LinkProps } from "./type";
 
 type TextLinkProps = LinkProps & { text: string; roomId?: number };

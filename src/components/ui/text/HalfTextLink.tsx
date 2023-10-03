@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { LinkProps } from "./type";
-import { theme } from "../../utils/themes";
+import { theme } from "../../../utils/themes";
 
 type HalfTextLinkProps = LinkProps & { linkText: string; nonLinkText: string };
 

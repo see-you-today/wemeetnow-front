@@ -1,7 +1,7 @@
 import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { ContainerProps } from "./type";
-import { theme } from "../../utils/themes";
+import { theme } from "../../../utils/themes";
 
 export default function ChatRoomWrapper({ children }: ContainerProps) {
   return <ScrollView style={styles.container}>{children}</ScrollView>;
@@ -9,7 +9,7 @@ export default function ChatRoomWrapper({ children }: ContainerProps) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: "90%",
     backgroundColor: theme.color.backGround,
   },
 });
