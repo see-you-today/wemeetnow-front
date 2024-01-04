@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import ChatMessages from "../components/chat/ChatMessages";
+import ChatMessages from "../components/chat/ChatMessage";
 import { WS_BASE_URL } from "@env";
 import SockJS from "sockjs-client";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";
-import { CompatClient, IMessage, Stomp } from "@stomp/stompjs";
-import StompJs from "@stomp/stompjs";
+import * as StompJs from "@stomp/stompjs";
+
 import {
   Button,
+  KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -16,182 +17,154 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import PlusIcon from "../components/ui/icon/PlusIcon";
+import PlusIcon from "../components/common/icon/PlusIcon";
 import { theme } from "../utils/themes";
-import EmotionIcon from "../components/ui/icon/EmotionIcon";
+import EmotionIcon from "../components/common/icon/EmotionIcon";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { reissueAccessTokenApi } from "../apis";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChatRoom">;
 
+const url = WS_BASE_URL;
+
 export default function ChatRoom({ route }: Props) {
   const [chatList, setChatList] = useState([]);
-  const [chat, setChat] = useState<IMessage>();
-  const client3 = useRef<CompatClient>();
-  let client: any = null;
-  // const client2 = useRef<CompatClient>();
-  const [client2, setClient2] = useState<StompJs.Client>();
-  // const [accessToken, setAccessToken] = useState<string | null>("");
-  const url = WS_BASE_URL;
-  const connect = () => {
-    // const accessToken = await AsyncStorage.getItem("accessToken");
+  const [accessTokenValue, setAccessTokenValue] = useState<string | null>(null);
+  const [chat, setChat] = useState<[]>([]);
+  const client = useRef<StompJs.Client>();
 
-    const k = new SockJS(url);
-    client = Stomp.over(() => k);
-    client.connect({}, function (frame: any) {
-      client.subscribe(`/send`, (messages: any) => {
-        console.log("messages", messages);
-        // LOG  messages body {"sendid":"1","receiveid":null,"content1":"hellol","content2":null}
-        console.log("messages body", messages.body);
-        setChat(JSON.parse(messages.body));
-      });
-      console.log("connect 끝");
-    });
-    client.reconnect_delay = 5000;
-  };
-  // const subcribe = (roomId: number) => {
-  //   if (client.current) {
-  //     client.current!.subscribe(`/${roomId}`, (messages) => {
-  //       console.log("messages", messages);
-  //       setChat(JSON.parse(messages.body));
-  //     });
-  //   }
-  // };
-  const sendAll = () => {
-    console.log("sendAll");
-    client.send(
-      "/receiveall",
-      {},
-      JSON.stringify({
-        sendid: "1",
-        content1: "hellol",
-      })
-    );
-    console.log("sendAll 끝");
-    // console.log(chat);
-  };
-  const disConnect = () => {
-    if (client) {
-      client.current?.disconnect();
+  const getAccessToken = async (): Promise<string | void> => {
+    try {
+      const refreshToken = await AsyncStorage.getItem("refreshToken");
+      const {
+        data: { accessToken },
+      } = await reissueAccessTokenApi(refreshToken);
+      await AsyncStorage.setItem("accessToken", accessToken);
+      console.log("accessTokenAwait", accessToken);
+      return accessToken;
+    } catch (e) {
+      await AsyncStorage.removeItem("refreshToken");
+      await AsyncStorage.removeItem("accessToken");
     }
   };
+  const connect = async () => {
+    const accessToken = await getAccessToken();
+    console.log("accessToken22", accessToken);
+    client.current = new StompJs.Client({
+      brokerURL: `${url}`,
+      onConnect: () => {
+        console.log("onConnect Success");
+        subscribe();
+      },
+      connectHeaders: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    client.current.activate();
+  };
+  const disconnect = () => {
+    client.current?.deactivate();
+    console.log("채팅이 종료되었습니다.");
+  };
+  const subscribe = () => {
+    client.current?.subscribe(`/sub/chat-room/2`, (messages: any) => {
+      console.log("messages", messages);
+      // LOG  messages body {"sendid":"1","receiveid":null,"content1":"hellol","content2":null}
+      console.log("messages body", messages.body);
+      // setChat(JSON.parse(messages.body));
+    });
+  };
+  const sendChat = async () => {
+    console.log("send-chat");
+    // console.log(client.current);
+    // route.params?.roomId
+    client.current?.publish({
+      destination: "/send-chat",
+
+      body: JSON.stringify({
+        chatRoomId: 2,
+        content: "hellol",
+        chatType: "CHAT",
+      }),
+    });
+    console.log("send-chat 끝");
+    // console.log(chat);
+  };
+
   useEffect(() => {
     connect();
-
-    // return () => disConnect();
+    return () => console.log(new Date()); // 채팅방 나간 시간
   }, []);
-  // useEffect(() => {
-  //   console.log("chat", chat);
-  // }, [chat]);
 
-  // const connect2 = async (roomId: number) => {
-  //   try {
-  //     const accessToken = await AsyncStorage.getItem("accessToken");
-  //     console.log("url", url);
-  //     console.log(accessToken);
-  //     const clientData = new StompJs.Client({
-  //       brokerURL: `${url}/api/v1/chats`,
-  //       connectHeaders: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //       },
-  //     });
-  //     clientData.onConnect = function () {
-  //       clientData.subscribe(
-  //         `/${roomId}`,
-  //         (messages) => {
-  //           console.log("messages", messages);
-  //           setChat(messages);
-  //         },
-  //         {
-  //           Authorization: `Bearer ${accessToken}`,
-  //         }
-  //       );
-  //     };
-  //     clientData.activate();
-  //     setClient2(clientData);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-  // const disConnect = () => {
-  //   // 연결 끊기
-  //   if (!client2) {
-  //     return;
-  //   }
-  //   client2.deactivate();
-  // };
-
-  // useEffect(() => {
-  //   const f = async () => {};
-  //   connect();
-  //   sendAll();
-  // });
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scorllView}>
+      <KeyboardAvoidingView style={styles.scorllView}>
         {/* {chat?.map()} */}
-        <ChatMessages
-          content="안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"
-          chatType="CHAT"
-          senderName="경환"
-          invitedUserName="동현"
-          sendDateTime="2023-07-12T23:52:39.230313"
-          notReadCount={1}
-          isSender={true}
-          senderImgUrl={
-            "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
-          }
-        />
-        <ChatMessages
-          content="안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"
-          chatType="CHAT"
-          senderName="경환"
-          invitedUserName="동현"
-          sendDateTime="2023-07-12T23:52:39.230313"
-          notReadCount={1}
-          isSender={true}
-          senderImgUrl={
-            "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
-          }
-        />
-        <ChatMessages
-          content="안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"
-          chatType="CHAT"
-          senderName="경환"
-          invitedUserName="동현"
-          sendDateTime="2023-07-12T23:52:39.230313"
-          notReadCount={1}
-          isSender={true}
-          senderImgUrl={
-            "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
-          }
-        />
-        <ChatMessages
-          content="안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"
-          chatType="CHAT"
-          senderName="경환"
-          invitedUserName="동현"
-          sendDateTime="2023-07-12T23:52:39.230313"
-          notReadCount={1}
-          isSender={true}
-          senderImgUrl={
-            "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
-          }
-        />
-        <ChatMessages
-          content="안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"
-          chatType="CHAT"
-          senderName="경환"
-          invitedUserName="동현"
-          sendDateTime="2023-07-12T23:52:39.230313"
-          notReadCount={1}
-          isSender={false}
-          senderImgUrl={
-            "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
-          }
-        />
-        {/* <Text>dfwef</Text> */}
-        {/* <TextInput style={styles.input}></TextInput> */}
-        <Button title="sendAll" onPress={() => sendAll()} />
-      </ScrollView>
+        <ScrollView>
+          <ChatMessages
+            content="안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"
+            chatType="CHAT"
+            senderName="경환"
+            invitedUserName="동현"
+            sendDateTime="2023-07-12T23:52:39.230313"
+            notReadCount={1}
+            isSender={true}
+            senderImgUrl={
+              "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
+            }
+          />
+          <ChatMessages
+            content="안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"
+            chatType="CHAT"
+            senderName="경환"
+            invitedUserName="동현"
+            sendDateTime="2023-07-12T23:52:39.230313"
+            notReadCount={1}
+            isSender={true}
+            senderImgUrl={
+              "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
+            }
+          />
+          <ChatMessages
+            content="안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"
+            chatType="CHAT"
+            senderName="경환"
+            invitedUserName="동현"
+            sendDateTime="2023-07-12T23:52:39.230313"
+            notReadCount={1}
+            isSender={true}
+            senderImgUrl={
+              "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
+            }
+          />
+          <ChatMessages
+            content="안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"
+            chatType="CHAT"
+            senderName="경환"
+            invitedUserName="동현"
+            sendDateTime="2023-07-12T23:52:39.230313"
+            notReadCount={1}
+            isSender={true}
+            senderImgUrl={
+              "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
+            }
+          />
+          <ChatMessages
+            content="안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"
+            chatType="CHAT"
+            senderName="경환"
+            invitedUserName="동현"
+            sendDateTime="2023-07-12T23:52:39.230313"
+            notReadCount={1}
+            isSender={false}
+            senderImgUrl={
+              "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
+            }
+          />
+          {/* {/* <Button title="sendAll" onPress={() => sendAll()} /> */}
+          <Button title="sendChat" onPress={() => sendChat()} />
+        </ScrollView>
+      </KeyboardAvoidingView>
       <View style={styles.inputView}>
         <TouchableOpacity style={styles.plus}>
           <PlusIcon />
@@ -199,11 +172,15 @@ export default function ChatRoom({ route }: Props) {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.realInput}
-            // value=""
             multiline
             autoCapitalize="none"
             keyboardType="default"
           />
+          <TouchableOpacity style={styles.emotion}>
+            <View style={styles.submitButton}>
+              <Text style={styles.submitText}>입력</Text>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.emotion}>
             <EmotionIcon />
           </TouchableOpacity>
@@ -227,7 +204,7 @@ const styles = StyleSheet.create({
   },
   inputView: {
     flexDirection: "row",
-    backgroundColor: "green",
+    backgroundColor: theme.color.chatInputBackGround,
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
@@ -236,7 +213,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flex: 9,
     padding: 6,
-    backgroundColor: "red",
+    backgroundColor: theme.color.chatInputBackGround,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 30,
@@ -249,20 +226,36 @@ const styles = StyleSheet.create({
     maxHeight: 130,
     fontSize: 18,
     paddingHorizontal: 12,
+    color: theme.color.backGround,
   },
   emotion: {
     flex: 1,
     width: 40,
     height: 40,
     alignSelf: "flex-end",
-    backgroundColor: "yellow",
+    backgroundColor: theme.color.chatInputBackGround,
     justifyContent: "center",
     alignItems: "center",
   },
+  submitButton: {
+    flex: 1,
+    width: 40,
+    height: 40,
+    borderRadius: 5,
+    alignSelf: "flex-end",
+    backgroundColor: theme.color.chatSubmitButtonColor,
+    justifyContent: "center",
+    alignItems: "center",
+    color: theme.color.chatSubmitTextColor,
+  },
+  submitText: {
+    color: theme.color.chatSubmitTextColor,
+  },
   plus: {
     flex: 1,
-    backgroundColor: "blue",
+    backgroundColor: theme.color.chatInputBackGround,
     justifyContent: "center",
+    borderRadius: 100,
     alignItems: "center",
     alignSelf: "flex-end",
     width: "100%",

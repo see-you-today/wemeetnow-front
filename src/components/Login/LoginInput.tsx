@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useRecoilState } from "recoil";
 import { wrongUser } from "../../atoms/authState";
 import { useAuth } from "../../hooks/useAuth";
-import WarningText from "../ui/text/WarningText";
-import TextLink from "../ui/text/TextLink";
+import WarningText from "../common/text/WarningText";
+import TextLink from "../common/text/TextLink";
 import { NavigationProps } from "../../../App";
-import AuthSubmitButton from "../ui/button/AuthSubmitButton";
-import AuthInput from "../ui/input/AuthInput";
-import AuthInputContainer from "../ui/container/AuthInputContainer";
-import TitleText from "../ui/text/TitleText";
+import AuthSubmitButton from "../common/button/AuthSubmitButton";
+import AuthInput from "../common/input/AuthInput";
+import AuthInputContainer from "../common/container/AuthInputContainer";
+import TitleText from "../common/text/TitleText";
 
 type LoginInputProps = {
   navigation: NavigationProps;

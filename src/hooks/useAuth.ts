@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { isLogin, wrongUser } from "../atoms/authState";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { checkIsLoginApi, loginApi } from "../apis/auth";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";

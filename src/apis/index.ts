@@ -1,10 +1,9 @@
 import { isLogin } from "./../atoms/authState";
-import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
+import axios, { InternalAxiosRequestConfig } from "axios";
 import { BASE_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useSetRecoilState } from "recoil";
-
+import { useResetRecoilState } from "recoil";
+import { useNavigation } from "@react-navigation/native";
 const axiosApi = (url: string) => axios.create({ baseURL: url });
 
 const url = BASE_URL;
@@ -18,7 +17,7 @@ const axiosAuthApi = (url: string) => {
 export const defaultInstance = axiosApi(url);
 export const authInstance = axiosAuthApi(url);
 
-const reissueAccessTokenApi = async (refreshToken: string | null) => {
+export const reissueAccessTokenApi = async (refreshToken: string | null) => {
   return await defaultInstance.post("/api/v1/users/reissue", {
     refreshToken: refreshToken,
   });
@@ -61,9 +60,12 @@ authInstance.interceptors.request.use(
 );
 
 authInstance.interceptors.response.use(
-  (res) => res,
+  (res) => {
+    console.log("success response");
+    return res;
+  },
   async (err) => {
-    const setIsSignedIn = useSetRecoilState(isLogin);
+    console.log("fail response");
     const {
       config,
       response: { status },
@@ -74,9 +76,10 @@ authInstance.interceptors.response.use(
     config.sent = true;
     const accessToken = await getAccessToken();
     if (accessToken) {
+      console.log("accessToken 갱신");
       config.headers.Authorization = `Bearer ${accessToken}`;
     } else {
-      setIsSignedIn(false);
+      useResetRecoilState(isLogin);
       return Promise.reject(err);
     }
     return axios(config);

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import AuthInputContainer from "../ui/container/AuthInputContainer";
-import TitleText from "../ui/text/TitleText";
-import AuthInput from "../ui/input/AuthInput";
-import AuthSubmitButton from "../ui/button/AuthSubmitButton";
+import AuthInputContainer from "../common/container/AuthInputContainer";
+import TitleText from "../common/text/TitleText";
+import AuthInput from "../common/input/AuthInput";
+import AuthSubmitButton from "../common/button/AuthSubmitButton";
 
 export default function SignUpInput() {
   return (

@@ -10,12 +10,12 @@ interface ChatListProps {
 }
 
 export default function ChatRoomList({ navigation }: ChatListProps) {
-  const ChatRoomListItems = useGetChatRooms(navigation);
+  const chatRoomListItems = useGetChatRooms(navigation);
 
-
+  console.log(ChatRoomList);
   return (
     <ScrollView style={styles.container}>
-      {ChatRoomListItems.map((item) => (
+      {chatRoomListItems.map((item) => (
         <ChatRoomListItem
           key={item.chatRoomId}
           chatRoomName={item.chatRoomName}
