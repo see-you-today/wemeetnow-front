@@ -1,27 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
 import ChatMessages from "../components/chat/ChatMessage";
 import { WS_BASE_URL } from "@env";
-import SockJS from "sockjs-client";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";
 import * as StompJs from "@stomp/stompjs";
 
 import {
   Button,
-  KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+  Platform,
+  InputAccessoryView,
 } from "react-native";
-import PlusIcon from "../components/common/icon/PlusIcon";
 import { theme } from "../utils/themes";
-import EmotionIcon from "../components/common/icon/EmotionIcon";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { reissueAccessTokenApi } from "../apis";
+import ChatInput from "../components/common/input/ChatInput";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChatRoom">;
 
@@ -31,6 +26,7 @@ export default function ChatRoom({ route }: Props) {
   const [chatList, setChatList] = useState([]);
   const [accessTokenValue, setAccessTokenValue] = useState<string | null>(null);
   const [chat, setChat] = useState<[]>([]);
+  const scrollViewRef = useRef<ScrollView>(null);
   const client = useRef<StompJs.Client>();
 
   const getAccessToken = async (): Promise<string | void> => {
@@ -76,6 +72,8 @@ export default function ChatRoom({ route }: Props) {
   };
   const sendChat = async () => {
     console.log("send-chat");
+    scrollViewRef.current?.scrollToEnd();
+
     // console.log(client.current);
     // route.params?.roomId
     client.current?.publish({
@@ -92,113 +90,115 @@ export default function ChatRoom({ route }: Props) {
   };
 
   useEffect(() => {
+    // 잘 적용이 안됨
+    // scrollViewRef.current?.scrollToEnd({ animated: true });
+
     connect();
     return () => console.log(new Date()); // 채팅방 나간 시간
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView style={styles.scorllView}>
-        {/* {chat?.map()} */}
-        <ScrollView>
-          <ChatMessages
-            content="안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"
-            chatType="CHAT"
-            senderName="경환"
-            invitedUserName="동현"
-            sendDateTime="2023-07-12T23:52:39.230313"
-            notReadCount={1}
-            isSender={true}
-            senderImgUrl={
-              "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
-            }
-          />
-          <ChatMessages
-            content="안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"
-            chatType="CHAT"
-            senderName="경환"
-            invitedUserName="동현"
-            sendDateTime="2023-07-12T23:52:39.230313"
-            notReadCount={1}
-            isSender={true}
-            senderImgUrl={
-              "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
-            }
-          />
-          <ChatMessages
-            content="안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"
-            chatType="CHAT"
-            senderName="경환"
-            invitedUserName="동현"
-            sendDateTime="2023-07-12T23:52:39.230313"
-            notReadCount={1}
-            isSender={true}
-            senderImgUrl={
-              "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
-            }
-          />
-          <ChatMessages
-            content="안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"
-            chatType="CHAT"
-            senderName="경환"
-            invitedUserName="동현"
-            sendDateTime="2023-07-12T23:52:39.230313"
-            notReadCount={1}
-            isSender={true}
-            senderImgUrl={
-              "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
-            }
-          />
-          <ChatMessages
-            content="안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"
-            chatType="CHAT"
-            senderName="경환"
-            invitedUserName="동현"
-            sendDateTime="2023-07-12T23:52:39.230313"
-            notReadCount={1}
-            isSender={false}
-            senderImgUrl={
-              "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
-            }
-          />
-          {/* {/* <Button title="sendAll" onPress={() => sendAll()} /> */}
-          <Button title="sendChat" onPress={() => sendChat()} />
-        </ScrollView>
-      </KeyboardAvoidingView>
-      <View style={styles.inputView}>
-        <TouchableOpacity style={styles.plus}>
-          <PlusIcon />
-        </TouchableOpacity>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.realInput}
-            multiline
-            autoCapitalize="none"
-            keyboardType="default"
-          />
-          <TouchableOpacity style={styles.emotion}>
-            <View style={styles.submitButton}>
-              <Text style={styles.submitText}>입력</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.emotion}>
-            <EmotionIcon />
-          </TouchableOpacity>
-        </View>
-      </View>
+      {/* {chat?.map()} */}
+
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.scrollView}
+        automaticallyAdjustKeyboardInsets={true}
+        automaticallyAdjustContentInsets={false}
+        keyboardDismissMode="interactive"
+        keyboardShouldPersistTaps="handled"
+        contentInsetAdjustmentBehavior="never"
+        maintainVisibleContentPosition={{
+          minIndexForVisible: 0,
+          autoscrollToTopThreshold: 80,
+        }}
+      >
+        <ChatMessages
+          content="4444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444"
+          chatType="CHAT"
+          senderName="경환"
+          invitedUserName="동현"
+          sendDateTime="2023-07-12T23:52:39.230313"
+          notReadCount={1}
+          isSender={true}
+          senderImgUrl={
+            "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
+          }
+        />
+        <ChatMessages
+          content="33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333"
+          chatType="CHAT"
+          senderName="경환"
+          invitedUserName="동현"
+          sendDateTime="2023-07-12T23:52:39.230313"
+          notReadCount={1}
+          isSender={true}
+          senderImgUrl={
+            "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
+          }
+        />
+        <ChatMessages
+          content="22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222"
+          chatType="CHAT"
+          senderName="경환"
+          invitedUserName="동현"
+          sendDateTime="2023-07-12T23:52:39.230313"
+          notReadCount={1}
+          isSender={true}
+          senderImgUrl={
+            "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
+          }
+        />
+        <ChatMessages
+          content="1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+          chatType="CHAT"
+          senderName="경환"
+          invitedUserName="동현"
+          sendDateTime="2023-07-12T23:52:39.230313"
+          notReadCount={1}
+          isSender={true}
+          senderImgUrl={
+            "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
+          }
+        />
+        <ChatMessages
+          content="0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+          chatType="CHAT"
+          senderName="경환"
+          invitedUserName="동현"
+          sendDateTime="2023-07-12T23:52:39.230313"
+          notReadCount={1}
+          isSender={false}
+          senderImgUrl={
+            "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
+          }
+        />
+        {/* {/* <Button title="sendAll" onPress={() => sendAll()} /> */}
+        <Button title="sendChat" onPress={() => sendChat()} />
+      </ScrollView>
+      {Platform.OS === "ios" ? (
+        <InputAccessoryView>
+          <ChatInput />
+        </InputAccessoryView>
+      ) : (
+        <ChatInput />
+      )}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    flexDirection: "column",
     height: "100%",
     backgroundColor: theme.color.chatBackground,
   },
-  scorllView: {
-    flex: 10,
+  keyboardAvoidingscorllView: {
+    height: "auto",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+  },
+  scrollView: {
     height: "auto",
     flexDirection: "column",
   },
