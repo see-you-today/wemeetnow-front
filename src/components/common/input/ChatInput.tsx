@@ -9,7 +9,13 @@ import {
 import { theme } from "../../../utils/themes";
 import EmotionIcon from "../icon/EmotionIcon";
 import PlusIcon from "../icon/PlusIcon";
-export default function ChatInput() {
+export default function ChatInput({
+  myChat,
+  onChangeText,
+}: {
+  myChat: string;
+  onChangeText: (text: string) => void;
+}) {
   return (
     <View style={styles.inputView}>
       <TouchableOpacity style={styles.plus}>
@@ -21,6 +27,8 @@ export default function ChatInput() {
           multiline
           autoCapitalize="none"
           keyboardType="default"
+          value={myChat}
+          onChangeText={onChangeText}
         />
         <TouchableOpacity style={styles.emotion}>
           <View style={styles.submitButton}>

@@ -17,15 +17,16 @@ import { theme } from "../utils/themes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { reissueAccessTokenApi } from "../apis";
 import ChatInput from "../components/common/input/ChatInput";
+import { ChatProps } from "../components/chat/type";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChatRoom">;
 
 const url = WS_BASE_URL;
 
 export default function ChatRoom({ route }: Props) {
-  const [chatList, setChatList] = useState([]);
+  const [chatList, setChatList] = useState<ChatProps[]>([]);
   const [accessTokenValue, setAccessTokenValue] = useState<string | null>(null);
-  const [chat, setChat] = useState<[]>([]);
+  const [myChat, setMyChat] = useState<string>("");
   const scrollViewRef = useRef<ScrollView>(null);
   const client = useRef<StompJs.Client>();
 
@@ -48,59 +49,81 @@ export default function ChatRoom({ route }: Props) {
     console.log("accessToken22", accessToken);
     client.current = new StompJs.Client({
       brokerURL: `${url}`,
-      onConnect: () => {
-        console.log("onConnect Success");
-        subscribe();
-      },
+
       connectHeaders: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
+    client.current.onConnect = () => {
+      console.log("성공 onConnect");
+      client.current?.subscribe(
+        `/sub/chat-room/${route.params?.roomId}`,
+        (messages: any) => {
+          console.log("messages", messages);
+          // LOG  messages body {"sendid":"1","receiveid":null,"content1":"hellol","content2":null}
+          console.log("messages body", messages.body);
+          // setChat(JSON.parse(messages.body));
+        },
+        { Authorization: `Bearer ${accessToken}` }
+      );
+    };
+    client.current.onStompError = (frame) => {};
     client.current.activate();
   };
   const disconnect = () => {
     client.current?.deactivate();
     console.log("채팅이 종료되었습니다.");
   };
-  const subscribe = () => {
-    client.current?.subscribe(`/sub/chat-room/2`, (messages: any) => {
-      console.log("messages", messages);
-      // LOG  messages body {"sendid":"1","receiveid":null,"content1":"hellol","content2":null}
-      console.log("messages body", messages.body);
-      // setChat(JSON.parse(messages.body));
-    });
-  };
+  // const subscribe = () => {
+  //   client.current?.subscribe(
+  //     `/sub/chat-room/${route.params?.roomId}`,
+  //     (messages: any) => {
+  //       console.log("messages", messages);
+  //       // LOG  messages body {"sendid":"1","receiveid":null,"content1":"hellol","content2":null}
+  //       console.log("messages body", messages.body);
+  //       // setChat(JSON.parse(messages.body));
+  //     }
+  //   );
+  // };
   const sendChat = async () => {
     console.log("send-chat");
+    const accessToken = await getAccessToken();
+
     scrollViewRef.current?.scrollToEnd();
 
     // console.log(client.current);
     // route.params?.roomId
     client.current?.publish({
-      destination: "/send-chat",
-
+      destination: "/api/v1/chats",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
       body: JSON.stringify({
-        chatRoomId: 2,
-        content: "hellol",
+        chatRoomId: route.params?.roomId,
+        content: myChat,
         chatType: "CHAT",
+        invitedUserName: undefined,
       }),
     });
     console.log("send-chat 끝");
+    console.log(myChat);
     // console.log(chat);
+    // setChatList((prev) => [...prev, { content: "hellol" }]);
   };
 
   useEffect(() => {
     // 잘 적용이 안됨
     // scrollViewRef.current?.scrollToEnd({ animated: true });
-
-    connect();
+    const subscribe = async () => {
+      await connect();
+    };
+    // connect();
+    subscribe();
     return () => console.log(new Date()); // 채팅방 나간 시간
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* {chat?.map()} */}
-
       <ScrollView
         ref={scrollViewRef}
         style={styles.scrollView}
@@ -114,83 +137,47 @@ export default function ChatRoom({ route }: Props) {
           autoscrollToTopThreshold: 80,
         }}
       >
-        <ChatMessages
-          content="4444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444"
-          chatType="CHAT"
-          senderName="경환"
-          invitedUserName="동현"
-          sendDateTime="2023-07-12T23:52:39.230313"
-          notReadCount={1}
-          isSender={true}
-          senderImgUrl={
-            "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
-          }
-        />
-        <ChatMessages
-          content="33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333"
-          chatType="CHAT"
-          senderName="경환"
-          invitedUserName="동현"
-          sendDateTime="2023-07-12T23:52:39.230313"
-          notReadCount={1}
-          isSender={true}
-          senderImgUrl={
-            "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
-          }
-        />
-        <ChatMessages
-          content="22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222"
-          chatType="CHAT"
-          senderName="경환"
-          invitedUserName="동현"
-          sendDateTime="2023-07-12T23:52:39.230313"
-          notReadCount={1}
-          isSender={true}
-          senderImgUrl={
-            "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
-          }
-        />
-        <ChatMessages
-          content="1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-          chatType="CHAT"
-          senderName="경환"
-          invitedUserName="동현"
-          sendDateTime="2023-07-12T23:52:39.230313"
-          notReadCount={1}
-          isSender={true}
-          senderImgUrl={
-            "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
-          }
-        />
-        <ChatMessages
-          content="0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-          chatType="CHAT"
-          senderName="경환"
-          invitedUserName="동현"
-          sendDateTime="2023-07-12T23:52:39.230313"
-          notReadCount={1}
-          isSender={false}
-          senderImgUrl={
-            "https://velog.velcdn.com/images/kyunghwan1207/post/5a260302-de64-4f74-b482-89874a0f18f8/image.png"
-          }
-        />
+        {chatList.map((chat) => (
+          <ChatMessages
+            content={chat.content}
+            chatType={chat.chatType}
+            senderName={chat.senderName}
+            invitedUserName={chat.invitedUserName}
+            sendDateTime={chat.sendDateTime}
+            notReadCount={chat.notReadCount}
+            isSender={chat.isSender}
+            senderImgUrl={chat.senderImgUrl}
+          />
+        ))}
+
         {/* {/* <Button title="sendAll" onPress={() => sendAll()} /> */}
         <Button title="sendChat" onPress={() => sendChat()} />
       </ScrollView>
       {Platform.OS === "ios" ? (
         <InputAccessoryView>
-          <ChatInput />
+          <ChatInput
+            myChat={myChat}
+            onChangeText={(text: string) => {
+              setMyChat(text);
+            }}
+          />
         </InputAccessoryView>
       ) : (
-        <ChatInput />
+        <ChatInput
+          myChat={myChat}
+          onChangeText={(text: string) => {
+            setMyChat(text);
+          }}
+        />
       )}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeContainer: {},
   container: {
-    height: "100%",
+    flex: 1,
     backgroundColor: theme.color.chatBackground,
   },
   keyboardAvoidingscorllView: {
